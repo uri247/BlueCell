@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Blue", "Blue\Blue.vcxproj", "{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bluez", "Bluez\Bluez.vcxproj", "{E4F6CF7B-ED13-483C-B785-C071DB3D39CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}.Debug|Win32.Build.0 = Debug|Win32
+		{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}.Debug|Win32.Deploy.0 = Debug|Win32
+		{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}.Release|Win32.ActiveCfg = Release|Win32
+		{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}.Release|Win32.Build.0 = Release|Win32
+		{971319C1-FE62-4CB2-9A4C-6503A1B86FBC}.Release|Win32.Deploy.0 = Release|Win32
+		{E4F6CF7B-ED13-483C-B785-C071DB3D39CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E4F6CF7B-ED13-483C-B785-C071DB3D39CA}.Debug|Win32.Build.0 = Debug|Win32
+		{E4F6CF7B-ED13-483C-B785-C071DB3D39CA}.Release|Win32.ActiveCfg = Release|Win32
+		{E4F6CF7B-ED13-483C-B785-C071DB3D39CA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
