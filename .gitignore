@@ -3,6 +3,8 @@
 *.sdf
 *.opensdf
 *.suo
+*.ipch
+*.swp
 
 Debug/
 Release/
