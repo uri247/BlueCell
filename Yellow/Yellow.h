@@ -1,0 +1,8 @@
+
+
+
+
+struct Device
+{
+	BTDEVHDL handle;
+};

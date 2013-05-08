@@ -52,7 +52,7 @@ int wmain( int argc, wchar_t argv[] )
 
 	// advertize
 	CSADDR_INFO info;
-	info.iProtocol = BTHPROTO_RFCOMM;
+ 	info.iProtocol = BTHPROTO_RFCOMM;
 	info.iSocketType = SOCK_STREAM;
 	info.LocalAddr.lpSockaddr = (SOCKADDR*)&addr;
 	info.LocalAddr.iSockaddrLength = sizeof(addr);
