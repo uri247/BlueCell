@@ -41,3 +41,20 @@ public:
     char const* where() const { return m_where; }
     virtual const char* what() const { return m_msg; }
 };
+
+inline
+std::ostream& operator<<( std::ostream& strm, BTUINT8 (&address)[6] )
+{
+	strm << '(' << std::hex << std::setw(2);
+	for( int i=0; i<6; ++i ) {
+		strm << std::hex << std::setw(2) << std::setfill('0') << std::right << (int)address[i];
+		if( i < 5 )
+			strm << ":";
+		else
+			strm << ")";
+	}
+
+	return strm;
+}
+
+
