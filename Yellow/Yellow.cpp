@@ -161,6 +161,14 @@ int getUserServiceSelection( Device& device )
 	return choice;
 }
 
+void connect( Device& dev, Service& svc )
+{
+	BTINT32 status;
+	BTCONNHDL conhdl;
+
+	//status = Btsdk_Connect( svc.handle, 0, &conhdl );
+
+}
 
 
 int wmain( int argc, wchar_t* argv[] )
@@ -172,5 +180,6 @@ int wmain( int argc, wchar_t* argv[] )
 	devIndex = getUserDeviceSelection( );
 	getServices( g_devices[devIndex] );
 	svcIndex = getUserServiceSelection( g_devices[devIndex] );
+	connect( g_devices[devIndex], g_devices[devIndex].services[svcIndex] );
 }
 
