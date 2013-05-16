@@ -68,7 +68,7 @@ void discover( )
 	}
 
 	std::unique_lock<std::mutex> lock(g_cvmx);
-	status = Btsdk_StartDeviceDiscovery( 0, 20, 30 );
+	status = Btsdk_StartDeviceDiscovery( 0, 20, 5 );
 	g_cv.wait(lock);
 
 	for( Device& device : g_devices ) {
@@ -103,7 +103,7 @@ int getUserDeviceSelection( )
 		std::cout << index++ << ". " <<
 			std::left << std::setw(30) << device.name << 
 			device.address << 
-			"0x" << std::hex << std::right<< std::setw(12) << std::setfill(' ') << device.devclass <<
+			"    0x" << std::hex << std::right<< std::setw(8) << std::setfill('0') << device.devclass <<
 			std::endl;
 	}
 
@@ -165,9 +165,41 @@ void connect( Device& dev, Service& svc )
 {
 	BTINT32 status;
 	BTCONNHDL conhdl;
+	BtSdkConnectionPropertyStru props;
 
-	//status = Btsdk_Connect( svc.handle, 0, &conhdl );
+	status = Btsdk_Connect( svc.handle, 0, &conhdl );
 
+	if( status == BTSDK_ER_CONNECTION_EXIST ) {
+		BTSDKHANDLE hsrch;
+		hsrch = Btsdk_StartEnumConnection();
+		while( true ) {
+		    conhdl = Btsdk_EnumConnection( hsrch, &props );
+			if( conhdl == BTSDK_INVALID_HANDLE ) {
+				break;
+			}
+			if( props.device_handle == dev.handle && props.service_handle == svc.handle ) {
+				break;
+			}
+		}
+		Btsdk_EndEnumConnection( hsrch );
+	}
+
+	status = Btsdk_GetConnectionProperty( conhdl, &props );
+}
+
+
+
+
+
+typedef DWORD (__cdecl *MB_StartEnumContacts)( BTUINT8* address, char* buffer, DWORD magic2, DWORD magic1 );
+
+void getContacts( Device& dev )
+{
+	HMODULE hlib = LoadLibrary( L"BsMobileSDK.dll" );
+	MB_StartEnumContacts procStartEnum = (MB_StartEnumContacts)GetProcAddress( hlib, "MB_StartEnumContacts" );
+	char buffer[512];
+	DWORD bthandle = (*procStartEnum)( dev.address, buffer, 0, 0x494 );
+	//DWORD bthandle = (*procStartEnum)( 0x494, 0, buffer, dev.address );
 }
 
 
@@ -181,5 +213,7 @@ int wmain( int argc, wchar_t* argv[] )
 	getServices( g_devices[devIndex] );
 	svcIndex = getUserServiceSelection( g_devices[devIndex] );
 	connect( g_devices[devIndex], g_devices[devIndex].services[svcIndex] );
+
+	//getContacts( g_devices[devIndex] );
 }
 

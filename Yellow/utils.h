@@ -3,6 +3,7 @@
 
 class GleWin32
 {
+	// GleWin32 - GetLastError for Win32 errors
     // This is a traits class to be used by 'CodeException' exception class. The error code
     // is retreived from GetLastError
 public:
@@ -12,11 +13,13 @@ public:
 
 class GleWsa
 {
+	// GleWSA - GetLastError for WinSock
     // A traits class for CodeException. The error code is int and is retrieved from WSAGetLastError
 public:
     typedef int CodeType;
     static DWORD gle() { return WSAGetLastError(); }
 };
+
 
 template< typename Tr >
 class CodeException : public std::exception
@@ -41,6 +44,7 @@ public:
     char const* where() const { return m_where; }
     virtual const char* what() const { return m_msg; }
 };
+
 
 inline
 std::ostream& operator<<( std::ostream& strm, BTUINT8 (&address)[6] )
