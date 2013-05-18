@@ -4,11 +4,11 @@
 #include <exception>
 #include <vector>
 #include <condition_variable>
-
+#include <regex>
+#include <sstream>
+#include <map>
 
 #include <sdkddkver.h>
-#include <WinSock2.h>
-#include <ws2bth.h>
 
 #include <atlbase.h>
 

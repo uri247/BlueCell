@@ -18,3 +18,17 @@ struct Device
 };
 
 
+
+struct VCard {
+	int ver_major;
+	int ver_minor;
+	std::string full_name;
+	std::vector<std::string> names;
+	std::map<std::string, std::string> telephones;
+	std::vector<std::string> emails;
+	int uid;
+};
+
+
+void VCardParse( std::string str, VCard& v );
+std::ostream& operator<<( std::ostream& strm, VCard& v );

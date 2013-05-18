@@ -1,6 +1,5 @@
 #include <exception>
 
-
 class GleWin32
 {
 	// GleWin32 - GetLastError for Win32 errors
@@ -10,16 +9,6 @@ public:
     typedef DWORD CodeType;
     static DWORD gle() { return GetLastError(); }
 };
-
-class GleWsa
-{
-	// GleWSA - GetLastError for WinSock
-    // A traits class for CodeException. The error code is int and is retrieved from WSAGetLastError
-public:
-    typedef int CodeType;
-    static DWORD gle() { return WSAGetLastError(); }
-};
-
 
 template< typename Tr >
 class CodeException : public std::exception

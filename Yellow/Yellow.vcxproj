@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{543D79E9-B723-4188-B345-9A676496AA9F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Yello</RootNamespace>
+    <RootNamespace>Yellow</RootNamespace>
     <ProjectName>Yellow</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -92,6 +92,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="vcard.cpp" />
     <ClCompile Include="Yellow.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

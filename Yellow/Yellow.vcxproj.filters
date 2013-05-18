@@ -14,5 +14,6 @@
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Yellow.cpp" />
+    <ClCompile Include="vcard.cpp" />
   </ItemGroup>
 </Project>

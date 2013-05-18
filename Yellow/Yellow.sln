@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yello", "Yello.vcxproj", "{543D79E9-B723-4188-B345-9A676496AA9F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Yellow", "Yellow.vcxproj", "{543D79E9-B723-4188-B345-9A676496AA9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

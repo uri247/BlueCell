@@ -8,8 +8,8 @@ const int discover_timeout = 30;
 
 std::mutex g_cvmx;
 std::condition_variable g_cv;
-std::vector<Device> g_devices;
-
+//std::vector<Device> g_devices;
+std::vector<BtSdkRemoteDevicePropertyStru> g_devices(20);
 
 void initApplication( )
 {
@@ -38,9 +38,9 @@ void initApplication( )
 
 void inquiryResultInd( BTDEVHDL handle )
 {
-	Device device;
-	device.handle = handle;
-	g_devices.push_back( device );
+	//Device device;
+	//device.handle = handle;
+	//g_devices.push_back( device );
 }
 
 void inquiryCompleteInd( void )
@@ -71,6 +71,30 @@ void discover( )
 	status = Btsdk_StartDeviceDiscovery( 0, 20, 5 );
 	g_cv.wait(lock);
 
+}
+
+
+void getDevices( )
+{
+	BTSDKHANDLE hsrch;
+	unsigned int index;
+
+	hsrch = Btsdk_StartEnumRemoteDevice( BTSDK_ERD_FLAG_NOLIMIT, 0 );
+	if( hsrch == BTSDK_INVALID_HANDLE ) {
+		throw std::exception( "error from Btsdk_StartEnumRemoteDevice" );
+	}
+
+	for( index = 0; index < g_devices.size(); ++index )
+	{
+		BtSdkRemoteDevicePropertyStru& props = g_devices[index];
+	    Btsdk_EnumRemoteDevice( hsrch, &props );
+	}
+
+}
+
+
+
+/*
 	for( Device& device : g_devices ) {
 		char name[40];
 		BTUINT16 maxlen = sizeof(name);
@@ -95,9 +119,21 @@ void discover( )
 	__asm nop;
 	
 }
-
+*/
 int getUserDeviceSelection( )
 {
+	int index = 0;
+	for( BtSdkRemoteDevicePropertyStru& props : g_devices )
+	{
+		if( props.mask ) {
+			std::cout << index++ << ". " <<
+				std::left << std::setw(30) << std::setfill(' ') << props.name << props.bd_addr <<
+				"    0x" << std::hex << std::right<< std::setw(8) << std::setfill('0') << props.dev_class <<
+				std::endl;
+		}
+	}
+
+	/*
 	int index = 0;
 	for( Device& device : g_devices ) {
 		std::cout << index++ << ". " <<
@@ -106,6 +142,7 @@ int getUserDeviceSelection( )
 			"    0x" << std::hex << std::right<< std::setw(8) << std::setfill('0') << device.devclass <<
 			std::endl;
 	}
+	*/
 
 	int choice;
 	std::cout << std::endl << "Your choice: ";
@@ -188,32 +225,64 @@ void connect( Device& dev, Service& svc )
 }
 
 
+struct BsBlob {
+	DWORD len;
+	char buffer[8000];
+};
+
+typedef DWORD (__cdecl *MB_StartEnumContacts)( BTUINT8* address, char* buffer, DWORD magic2, DWORD cbBuffer );
+typedef void (__cdecl *MB_InitialPlugDB)( void );
+typedef DWORD (__cdecl *MB_EnumContact)( DWORD hsrch, DWORD* ptr1, BsBlob* pblob );
 
 
-
-typedef DWORD (__cdecl *MB_StartEnumContacts)( BTUINT8* address, char* buffer, DWORD magic2, DWORD magic1 );
-
-void getContacts( Device& dev )
+void getContacts( BtSdkRemoteDevicePropertyStru& dev )
 {
 	HMODULE hlib = LoadLibrary( L"BsMobileSDK.dll" );
+	MB_InitialPlugDB procInitialPlugDB = (MB_InitialPlugDB)GetProcAddress( hlib, "MB_InitialPlugDB" );
 	MB_StartEnumContacts procStartEnum = (MB_StartEnumContacts)GetProcAddress( hlib, "MB_StartEnumContacts" );
-	char buffer[512];
-	DWORD bthandle = (*procStartEnum)( dev.address, buffer, 0, 0x494 );
-	//DWORD bthandle = (*procStartEnum)( 0x494, 0, buffer, dev.address );
+	MB_EnumContact procEnumContacts = (MB_EnumContact)GetProcAddress( hlib, "MB_EnumContacts" );
+
+	procInitialPlugDB();
+
+	BsBlob blob;
+	memset( &blob, 0, sizeof(blob) );
+	DWORD bthandle = (*procStartEnum)( dev.bd_addr, blob.buffer, 0, sizeof(blob.buffer) );
+
+	DWORD dw2010;
+	int result;
+
+	VCard title;
+	title.full_name = "Full Name";
+	title.telephones["CELL"] = "Cell";
+	title.telephones["WORK"] = "Work";
+	title.telephones["HOME"] = "Home";
+	title.emails.push_back( "Email" );
+	std::cout << title << std::endl << 
+		"------------------------------------------------------------------------------------------" << std::endl;
+
+	do {
+		memset( &blob, 0, sizeof(blob) );
+	    result = (*procEnumContacts)( bthandle, &dw2010, &blob );
+		std::string vcardStr(blob.buffer);
+		VCard v;
+		VCardParse( vcardStr, v );
+		std::cout << v << std::endl;
+	} while( result );
 }
 
 
 int wmain( int argc, wchar_t* argv[] )
 {
-	int devIndex, svcIndex;
+	int devIndex;
 
 	initApplication( );
-	discover();
+	//discover();
+	getDevices();
 	devIndex = getUserDeviceSelection( );
-	getServices( g_devices[devIndex] );
-	svcIndex = getUserServiceSelection( g_devices[devIndex] );
-	connect( g_devices[devIndex], g_devices[devIndex].services[svcIndex] );
+	//getServices( g_devices[devIndex] );
+	//svcIndex = getUserServiceSelection( g_devices[devIndex] );
+	//connect( g_devices[devIndex], g_devices[devIndex].services[svcIndex] );
 
-	//getContacts( g_devices[devIndex] );
+	getContacts( g_devices[devIndex] );
 }
 
